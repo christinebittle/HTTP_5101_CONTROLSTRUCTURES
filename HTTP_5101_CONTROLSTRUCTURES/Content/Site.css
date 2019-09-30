@@ -1,7 +1,12 @@
-﻿/* Move down content because we have a fixed navbar that is 50px tall */
-body {
+﻿﻿ /* Move down content because we have a fixed navbar that is 50px tall */
+body{
     padding-top: 50px;
     padding-bottom: 20px;
+    background: #dedede;
+}
+
+h1{
+    text-align:center;
 }
 
 /* Wrapping element */
@@ -17,6 +22,34 @@ select,
 textarea {
     max-width: 280px;
 }
+
+section, aside {
+    width: 80%;
+    background: #fefefe;
+    padding: 20px;
+    margin: 0 auto;
+    margin-bottom: 15px;
+}
+
+aside {
+    width: 50%;
+    background: #dedede;
+}
+
+.col2 {
+    width: 50%;
+    float: left;
+}
+
+main {
+    width: 80%;
+    margin: 0 auto;
+}
+
+    main h2 {
+        text-align: center;
+    }
+
 
 
 /* Responsive: Portrait tablets and up */

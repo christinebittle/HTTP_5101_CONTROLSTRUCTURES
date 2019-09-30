@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Diagnostics;
 
 namespace HTTP_5101_CONTROLSTRUCTURES
 {
@@ -22,58 +23,167 @@ namespace HTTP_5101_CONTROLSTRUCTURES
                 //If everything seems okay, we can proceed.
                 if (Page.IsValid)
                 {
+
+
                     //wipe out any previous information inside the summary.
                     vehicle_summary.InnerHtml = "";
 
-                    //Gather information and store it as a variable
+                    //Gather information for vehicle and store it as a variable
                     int Vehicle_Weight = Convert.ToInt32(vehicle_weight.Text);
-                    string Vehicle_Fuelefficiency = vehicle_fuelefficiency.SelectedValue;
+                    int Vehicle_Fuelefficiency = Convert.ToInt32(vehicle_fuelefficiency.SelectedValue);
                     int Vehicle_Topspeed = Convert.ToInt32(vehicle_topspeed.Text);
                     int Vehicle_Engineheat = Convert.ToInt32(vehicle_engineheat.Text);
                     int Vehicle_Tirediameter = Convert.ToInt32(vehicle_tirediameter.Text);
 
-                    //These questions will be answered in a code-along during class.
+                    //Gather information for driver and store it as a variable
+                    string Driver_Lname = driver_lname.Text;
+                    string Driver_Identifier = driver_identifier.Text;
 
-                    //Write an if statement to check if the weight is over 1800kg -- too heavy
-                    if (Vehicle_Weight > 1800)
-                    {
-                        vehicle_summary.InnerHtml += "Your car is too heavy<br>";
-                    }
+                    //Gather information for the race and store it as a variable
+                    string Race_Date = race_date.Text;
+                    //This could be stored as an integer for validations, but will used as a string to convert to datetime
+                    string Race_Hour = race_hour.Text;
 
-                    //Write an if statement to check if the weight is under 1200kg -- too  light
+                    //Learning how to use date format strings
+                    //https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
 
-                    //Write an if statement to check if the engineheat is more than 1250degrees C -- too hot
+                    DateTime Race_Time = DateTime.ParseExact(Race_Date+" "+Race_Hour, "yyyy/M/d Hmm", System.Globalization.CultureInfo.InvariantCulture);
+
+                    //We have our templates for Vehicle, Driver, and Race.
+
+                    //instantiate a new instance of the Vehicle Class, the vehicle Object.
+                    Vehicle Race_Vehicle = new Vehicle();
+                    Race_Vehicle.Vehicle_Engineheat = Vehicle_Engineheat;
+                    Race_Vehicle.Vehicle_Weight = Vehicle_Weight;
+                    Race_Vehicle.Vehicle_Fuelefficiency = Vehicle_Fuelefficiency;
+                    Race_Vehicle.Vehicle_Tirediameter = Vehicle_Tirediameter;
+                    Race_Vehicle.Vehicle_Topspeed = Vehicle_Topspeed;
+
+                    //instantiate a new instance of the driver class, the driver Object
+                    Driver Race_Driver = new Driver();
+                    Race_Driver.Driver_Lname = Driver_Lname;
+                    Race_Driver.Driver_Identifier = Driver_Identifier;
+
+                    //instantiate a new instance of the race class, the race object
+                    Race Fascar_Race = new Race();
+                    Fascar_Race.Race_Driver = Race_Driver;
+                    Fascar_Race.Race_Vehicle = Race_Vehicle;
+                    Fascar_Race.Race_Time = Race_Time;
 
 
+                    vehicle_summary.InnerHtml = Fascar_Race.PrintSummary();
 
-                    /*
-                        Write an if statment to check IF
-                        the topspeed is over 320km/hr -- too fast
-                        OR
-                        the topspeed is under 200km/hr -- too slow
-                    */
-                    if (Vehicle_Topspeed > 320 || Vehicle_Topspeed < 200)
-                    {
-                        vehicle_summary.InnerHtml += "Your car is either too fast or too slow.";
-                    }
-
-
-                    /*
-                        Write an if statement to check IF
-                        the dire diameter is under 36cm -- too small
-                        OR
-                        the dire diameter is over 41cm -- too big
-                    */
-
-
-                    /*
-                        Write an if statement to check IF
-                        the topspeed is over 300km/hr
-                        and
-                        the fuel efficiency is under 40L/100km
-                    */
                 }
             }
         }
+
+        //Server Side Validation Functions
+
+        //validation function on the speed of a vehicle
+        protected void Vehicle_Speed_Validate (object sender, ServerValidateEventArgs e){
+            //no empty inputs
+
+            //How to tell if an input is a valid integer on the server side?
+            //code referenced from Microsoft Sept 29, 2019
+            //purpose: use TryParse to make sure that the vehicle speed is valid
+            //link: https://docs.microsoft.com/en-us/dotnet/api/system.int32.tryparse?redirectedfrom=MSDN&view=netframework-4.8#System_Int32_TryParse_System_String_System_Int32__
+            //what does out do? it allows us to use the variable (Vehicle_Topspeed) if the conversion succeeded.
+
+            bool SpeedIsInteger = Int32.TryParse(e.Value, out int Vehicle_Topspeed);
+            //The above line will set the Vehicle Topspeed
+            //int Vehicle_Topspeed = Convert.ToInt32(e.Value);
+
+            if (!SpeedIsInteger)
+            {
+                
+                e.IsValid = false;
+            }
+            //check to see if the speed is more than 320km/hr or less than 200km/hr
+            else if (Vehicle_Topspeed > 320 || Vehicle_Topspeed< 200)
+            {
+                e.IsValid = false;
+            }
+            else
+            {
+                e.IsValid = true;
+            }
+        }
+
+        //validation function on the weight of the vehicle
+        //make sure that the vehicle weight is between 1200kg and 1800kg
+        protected void Vehicle_Weight_Validate(object sender, ServerValidateEventArgs e)
+        {
+            
+        }
+
+        //validation function on the engine heat of a vehicle
+        protected void Vehicle_Engine_Validate(object sender, ServerValidateEventArgs e)
+        {
+            bool EngineHeatIsInteger = Int32.TryParse(e.Value, out int Vehicle_Engineheat);
+
+            Debug.WriteLine("The reported Engine Heat is "+ Vehicle_Engineheat.ToString()+" and the bool is "+EngineHeatIsInteger);
+            //int Vehicle_Engineheat = Convert.ToInt32(e.Value);
+            //Write an if statement to check if the engineheat is more than 1250degrees C -- too hot
+
+            if (!EngineHeatIsInteger)
+            {
+                e.IsValid = false;
+            }
+            else if (Vehicle_Engineheat > 1250)
+            {
+                e.IsValid = false;
+            }
+            else
+            {
+                e.IsValid = true;
+            }
+        }
+
+        //validation function on the tires of a vehicle
+        protected void Vehicle_Tire_Validate(object sender, ServerValidateEventArgs e)
+        {
+            bool DiameterIsInteger = Int32.TryParse(e.Value, out int Vehicle_Tirediameter);
+            //int Vehicle_Tirediameter = Convert.ToInt32(e.Value);
+            //Write an if statement to check if the engineheat is more than 1250degrees C -- too hot
+            if (!DiameterIsInteger)
+            {
+                e.IsValid = false;
+            }
+            else if (Vehicle_Tirediameter < 36 || Vehicle_Tirediameter > 41)
+            {
+                e.IsValid = false;
+            }
+            else
+            {
+                e.IsValid = true;
+            }
+        }
+
+        protected void Vehicle_Environment_Validate(object sender, ServerValidateEventArgs e)
+        {
+            //int Vehicle_Topspeed = Convert.ToInt32(vehicle_topspeed.Text);
+            //int Vehicle_Fuelefficiency = Convert.ToInt32(vehicle_fuelefficiency.Text);
+            bool SpeedIsInteger = Int32.TryParse(vehicle_topspeed.Text, out int Vehicle_Topspeed);
+           
+
+            bool EfficiencyIsInteger = Int32.TryParse(vehicle_fuelefficiency.Text, out int Vehicle_Fuelefficiency);
+            if (!EfficiencyIsInteger)
+            {
+                e.IsValid = false;
+            }
+            else if (!SpeedIsInteger)
+            {
+                e.IsValid = false;
+            }
+            else if (Vehicle_Topspeed > 300 && Vehicle_Fuelefficiency > 40)
+            {
+                e.IsValid = false;
+            }
+            else
+            {
+                e.IsValid = true;
+            }
+        }
+
     }
 }

@@ -20,6 +20,10 @@ namespace HTTP_5101_CONTROLSTRUCTURES
             a1.InnerHtml = a1msg;
 
             //Print out the numbers 1 to 25
+            for (int i = 1; i<=25; i++)
+            {
+
+            }
 
             //Print out the numbers 10 to 35
             string a3msg = "";
@@ -39,6 +43,13 @@ namespace HTTP_5101_CONTROLSTRUCTURES
             }
             a5.InnerHtml = a5msg;
             //Print out the numbers 10 to 20, counting by 3s
+
+            string a6msg = "";
+            for (int i=10;i>0; i=i+3)
+            {
+                a6msg += i.ToString()+",";
+            }
+            a6.InnerHtml = a6msg;
 
             //Print out the numbers 50 to 23, counting by 4s
         }

@@ -67,6 +67,42 @@ namespace HTTP_5101_CONTROLSTRUCTURES {
         protected global::System.Web.UI.WebControls.TextBox vehicle_tirediameter;
         
         /// <summary>
+        /// driver_lname control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox driver_lname;
+        
+        /// <summary>
+        /// driver_identifier control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox driver_identifier;
+        
+        /// <summary>
+        /// race_date control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList race_date;
+        
+        /// <summary>
+        /// race_hour control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList race_hour;
+        
+        /// <summary>
         /// vehicle_summary control.
         /// </summary>
         /// <remarks>
